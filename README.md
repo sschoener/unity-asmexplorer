@@ -25,7 +25,7 @@ This will start the webservice that allows you to explore your assemblies and th
 Now point the browser of your choice to `http://localhost:8080/explorer/` (the last slash is absolutely necessary) and use the slick, well-designed (*cough cough*) interface to navigate to the method of your choice to inspect its generated x86/x64 assembly code.
 
 ## Caution
-Make sure that you are aware of the mode that the code you see is generated with. The tool works inside the editor as well, but the code generated there will obviously be less optimized. To see fully optimized code (well, to the extent that the Mono 2.6 compiler optimizes the code at least...), make sure to create a non-development build of your game and inspect the code using that build.
+Make sure that you are aware of the mode that the code you see is generated in. The tool works from inside the editor as well, but the code generated there will obviously be less optimized. To see fully optimized code (well, to the extent that the Mono 2.6 compiler optimizes the code at least...), make sure to create a non-development build of your game and inspect the code using that build.
 
 ## Known issues
  * The web interface is ugly and slow. Yes, I know; but that's not the point of this whole thing. Adding caching and some obvious optimizations to the webservice is left as an exercise to the reader.
