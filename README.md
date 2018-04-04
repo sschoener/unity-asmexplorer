@@ -7,7 +7,7 @@ To use this tool, import the included package into your Unity project. Then plac
 using AsmExplorer;
 using UnityEngine;
 
-class AsmExplorerHelper : MonoBehaviour
+class AsmExplorerHelper : MonoBehaviour {
 	private WebService _webService;
 	private void Awake() {
 		_webService = new WebService(new Explorer(), "explorer");
