@@ -165,7 +165,14 @@ tr:nth-child(even) {
                         first = false;
                         writer.Write(prop.Name);
                         writer.Write(" = ");
-                        writer.Write(prop.GetValue(attributes[i], null).ToString());
+                        var value = prop.GetValue(attributes[i], null);
+                        if (value == null)
+                            writer.Write("null");
+                        else if (value is string) {
+                            writer.Write("\"");
+                            writer.Write((value as string));
+                            writer.Write("\"");
+                        }
                     }
                     if (!first)
                         writer.Write(" ) ");
@@ -200,8 +207,6 @@ tr:nth-child(even) {
         }
 
         private void TypeLink(HtmlWriter writer, Type type, string txt) {
-            if (type.IsGenericType)
-                type = type.GetGenericTypeDefinition();
             writer.AHref(txt,
                 Html.Url(
                     _completePrefix + "inspect",

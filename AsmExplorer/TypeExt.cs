@@ -19,14 +19,24 @@ namespace AsmExplorer {
           {typeof(object), "object"}
         };
 
-        public static string PrettyName(this Type type, bool full=false) {
+        public enum NameMode {
+            Short,
+            WithNamespace,
+            Full
+        }
+
+        public static string PrettyName(this Type type, NameMode mode=NameMode.Short) {
             string name;
             if (_specialNames.TryGetValue(type, out name))
                 return name;
-            if (full)
+            if (mode == NameMode.Full)
                 return type.FullName;
+            else if (mode == NameMode.WithNamespace) {
+                if (string.IsNullOrEmpty(type.Namespace))
+                    return type.Name;
+                return type.Namespace + "." + type.Name;
+            }
             return type.Name;
         }
-
     }
 }

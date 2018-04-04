@@ -35,9 +35,20 @@ namespace AsmExplorer
             var attr = type.GetCustomAttributes(true);
             if (attr.Length > 0) {
                 writer.Break();
+                writer.Break();
                 WriteAttributes(writer, attr);
             }
-            writer.Inline("h2", type.Name);
+            
+            using (writer.Tag("h2")) {
+                writer.Write(type.PrettyName(TypeExt.NameMode.WithNamespace));
+                if (type.IsGenericType)
+                    WriteGenericArguments(writer, type.GetGenericArguments(), TypeExt.NameMode.WithNamespace);
+            }
+
+            if (type.IsGenericType) {
+                TypeLink(writer, type.GetGenericTypeDefinition(), "go to generic definition " + type.Name);
+                writer.Break();
+            }
             WriteTypeDeclaration(writer, type);
             if (type.IsClass || type.IsValueType) {
                 InspectClass(writer, type);
@@ -119,7 +130,7 @@ namespace AsmExplorer
                     if (f.FieldType.IsByRef) {
                         writer.Write("ref ");
                         WriteTypeName(writer, f.FieldType.GetElementType());
-                    } else if (f.IsLiteral) {
+                    } else {
                         WriteTypeName(writer, f.FieldType);
                     }
                 },
@@ -246,16 +257,21 @@ namespace AsmExplorer
             );
         }
 
-        private void WriteGenericArguments(HtmlWriter writer, Type[] types) {
+        private void WriteGenericArguments(HtmlWriter writer, Type[] types, TypeExt.NameMode mode=TypeExt.NameMode.Short) {
             writer.Write("< ");
             for (int i = 0; i < types.Length; i++) {
                 if (i > 0)
                     writer.Write(", ");
-                if ((types[i].GenericParameterAttributes & GenericParameterAttributes.Covariant) != 0)
-                    writer.Write("out ");
-                else if ((types[i].GenericParameterAttributes & GenericParameterAttributes.Contravariant) != 0)
-                    writer.Write("in ");
-                writer.Write(types[i].Name);
+                if (types[i].IsGenericParameter){
+                    var gpa = types[i].GenericParameterAttributes;
+                    if ((gpa & GenericParameterAttributes.Covariant) != 0)
+                        writer.Write("out ");
+                    else if ((gpa & GenericParameterAttributes.Contravariant) != 0)
+                        writer.Write("in ");
+                    writer.Write(types[i].Name);
+                } else {
+                    TypeLink(writer, types[i], types[i].PrettyName(mode));
+                }
             }
             writer.Write(" >");
         }
@@ -397,14 +413,14 @@ namespace AsmExplorer
             } else if (type.IsValueType) {
                 writer.Write("struct ");
             } else {
-                writer.Write("<non declared type> " + type.PrettyName(full: true));
+                writer.Write("<non declared type> " + type.PrettyName(TypeExt.NameMode.Full));
                 return;
             }
 
             TypeLink(writer, type, type.Name);
 
-            if (type.IsGenericTypeDefinition) {
-                WriteGenericArguments(writer, type.GetGenericArguments());
+            if (type.IsGenericTypeDefinition || type.IsGenericType) {
+                WriteGenericArguments(writer, type.GetGenericArguments(), TypeExt.NameMode.WithNamespace);
             }
 
             bool hasBaseType = false;
