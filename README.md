@@ -30,4 +30,7 @@ Make sure that you are aware of the mode that the code you see is generated in. 
 ## Known issues
  * The web interface is ugly and slow. Yes, I know; but that's not the point of this whole thing. Adding caching and some obvious optimizations to the webservice is left as an exercise to the reader.
  * Everything breaks apart when you miss the final `/` in the webservice's URL. There is probably a very simple fix for this but I wanted to get this out sooner rather than later :)
- * The code is ugly and could use a clean up. I'm aware of this but don't see when I will find the time to fix this problem. It's good enough for a program hacked into being in two days :)
+ * The code could use a clean up. I'm aware of this but don't know when I will find the time to fix this problem. It's good enough for a program hacked into being in two days :)
+
+## License
+The code is licensed under a MIT license and is using SharpDisasm under the Simplified BSD license.
