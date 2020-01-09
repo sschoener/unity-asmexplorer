@@ -4,29 +4,33 @@ using System.Runtime.InteropServices;
 
 namespace AsmExplorer
 {
-    public static class Mono {
-        [DllImport("mono.dll", EntryPoint = "mono_debug_find_method", CharSet = CharSet.Ansi)]
+    public static class Mono
+    {
+        // used to be mono.dll for .NET 3.5 and earlier
+        const string MonoDllName = "mono-2.0-bdwgc.dll";
+        
+        [DllImport(MonoDllName, EntryPoint = "mono_debug_find_method", CharSet = CharSet.Ansi)]
         private static extern IntPtr DebugFindMethodJitInfo(IntPtr method, IntPtr domain);
-        [DllImport("mono.dll", EntryPoint = "mono_debug_free_method_jit_info", CharSet = CharSet.Ansi)]
+        [DllImport(MonoDllName, EntryPoint = "mono_debug_free_method_jit_info", CharSet = CharSet.Ansi)]
         private static extern IntPtr DebugFreeMethodJitInfo(IntPtr jitInfo);
 
 
-        [DllImport("mono.dll", CallingConvention = CallingConvention.FastCall, EntryPoint = "mono_domain_get", CharSet = CharSet.Ansi)]
+        [DllImport(MonoDllName, CallingConvention = CallingConvention.FastCall, EntryPoint = "mono_domain_get", CharSet = CharSet.Ansi)]
         private static extern IntPtr GetDomain();
 
-        [DllImport("mono.dll", EntryPoint="mono_jit_info_table_find", CharSet = CharSet.Ansi)]
+        [DllImport(MonoDllName, EntryPoint="mono_jit_info_table_find", CharSet = CharSet.Ansi)]
         private static extern IntPtr FindJitInfo(IntPtr domain, IntPtr instructionPointer);
         
-        [DllImport("mono.dll", EntryPoint="mono_jit_info_get_code_start", CharSet = CharSet.Ansi)]
+        [DllImport(MonoDllName, EntryPoint="mono_jit_info_get_code_start", CharSet = CharSet.Ansi)]
         private static extern IntPtr GetCodeStart(IntPtr jitInfo);
 
-        [DllImport("mono.dll", EntryPoint="mono_jit_info_get_code_size", CharSet = CharSet.Ansi)]
+        [DllImport(MonoDllName, EntryPoint="mono_jit_info_get_code_size", CharSet = CharSet.Ansi)]
         private static extern int GetCodeSize(IntPtr jitInfo);
 
-        [DllImport("mono.dll", EntryPoint="mono_jit_info_get_method", CharSet = CharSet.Ansi)]
+        [DllImport(MonoDllName, EntryPoint="mono_jit_info_get_method", CharSet = CharSet.Ansi)]
         private static extern IntPtr GetMethod(IntPtr jitInfo);
 
-        [DllImport("mono.dll", EntryPoint="mono_method_get_name", CharSet = CharSet.Ansi)]
+        [DllImport(MonoDllName, EntryPoint="mono_method_get_name", CharSet = CharSet.Ansi)]
         private static extern IntPtr GetMethodName(IntPtr monoMethod);
 
         public static void ForceCompilation(MethodInfo method) {
