@@ -6,14 +6,12 @@ namespace AsmExplorer
 {
     public static class Mono
     {
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
         // used to be mono.dll for .NET 3.5 and earlier
         const string MonoDllName = "mono-2.0-bdwgc.dll";
-        
-        [DllImport(MonoDllName, EntryPoint = "mono_debug_find_method", CharSet = CharSet.Ansi)]
-        private static extern IntPtr DebugFindMethodJitInfo(IntPtr method, IntPtr domain);
-        [DllImport(MonoDllName, EntryPoint = "mono_debug_free_method_jit_info", CharSet = CharSet.Ansi)]
-        private static extern IntPtr DebugFreeMethodJitInfo(IntPtr jitInfo);
-
+#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+        const string MonoDllName = "libmonobdwgc-2.0.dylib";
+#endif
 
         [DllImport(MonoDllName, CallingConvention = CallingConvention.FastCall, EntryPoint = "mono_domain_get", CharSet = CharSet.Ansi)]
         private static extern IntPtr GetDomain();
